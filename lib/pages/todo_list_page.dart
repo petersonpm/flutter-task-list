@@ -11,11 +11,22 @@ class TodoListPage extends StatelessWidget {
        padding: EdgeInsets.all(16),
        child: TextField(
          decoration: InputDecoration(
-           labelText: 'E-mail',
+           labelText: 'Preço',
+           hintText: 'exemplo@exemplo.com',
+           //border: OutlineInputBorder(),
+           errorText: null,
+           prefixText: 'R\$',
+           suffixText: 'cm',
+          ),
+         //obscureText: true ,
+         keyboardType: TextInputType.number,
+         style: TextStyle(
+           fontWeight: FontWeight.w700 ,
+           color: Colors.purple
          ),
-       ),
-     ),
-     ),
+         ),
+        ),
+      ),
     );
   }
 }
