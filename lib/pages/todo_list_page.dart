@@ -4,16 +4,18 @@ import 'package:lista/models/todo.dart';
 import '../widgets/todo_list_item.dart';
 
 class TodoListPage extends StatefulWidget {
-   TodoListPage({Key? key}) : super(key: key);
+  TodoListPage({Key? key}) : super(key: key);
 
   @override
   State<TodoListPage> createState() => _TodoListPageState();
 }
 
 class _TodoListPageState extends State<TodoListPage> {
-   final TextEditingController todoController = TextEditingController();
+  final TextEditingController todoController = TextEditingController();
 
   List<Todo> todos = [];
+  Todo? deletedTodo;
+  int?  deletedTodoPos;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class _TodoListPageState extends State<TodoListPage> {
               children: [
                 Row(
                   children: [
-                     Expanded(
+                    Expanded(
                       child: TextField(
                         controller: todoController,
                         decoration: const InputDecoration(
@@ -40,12 +42,10 @@ class _TodoListPageState extends State<TodoListPage> {
                     const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
-                        String text =  todoController.text;
+                        String text = todoController.text;
                         setState(() {
-                          Todo newTodo = Todo(
-                            title: text,
-                            dateTime: DateTime.now()
-                          );
+                          Todo newTodo =
+                              Todo(title: text, dateTime: DateTime.now());
                           todos.add(newTodo);
                         });
                         todoController.clear();
@@ -64,8 +64,8 @@ class _TodoListPageState extends State<TodoListPage> {
                 Flexible(
                   child: ListView(
                     shrinkWrap: true,
-                    children:  [
-                      for(Todo todo in todos)
+                    children: [
+                      for (Todo todo in todos)
                         TodoListItem(
                           todo: todo,
                           onDelete: onDelete,
@@ -77,7 +77,9 @@ class _TodoListPageState extends State<TodoListPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text('Você Possui ${todos.length} Tarefas Pendentes',),
+                      child: Text(
+                        'Você Possui ${todos.length} Tarefas Pendentes',
+                      ),
                     ),
                     SizedBox(width: 8),
                     ElevatedButton(
@@ -96,9 +98,31 @@ class _TodoListPageState extends State<TodoListPage> {
       ),
     );
   }
-  void onDelete(BuildContext, Todo todo)=> setState(() {
+
+  void onDelete(BuildContext, Todo todo) {
+    deletedTodo = todo;
+    deletedTodoPos = todos.indexOf(todo);
+
+    setState(() {
       todos.remove(todo);
     });
-
-
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Tarefa ${todo.title} foi Removida com sucesso!', style: TextStyle(fontSize: 12),),
+        backgroundColor: Color(0xffDC143C),
+        action: SnackBarAction(
+          label: 'Desfazer',
+          textColor: Color(0xffDC143C),
+          onPressed: () {
+            setState(() {
+              todos.insert(deletedTodoPos!, deletedTodo!);
+            });
+          },
+          backgroundColor: Colors.white,
+        ),
+        duration: const Duration(seconds: 5),
+      ),
+    );
+  }
 }

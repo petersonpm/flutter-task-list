@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import "package:flutter/cupertino.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +24,7 @@ class TodoListItem extends StatelessWidget {
           motion: ScrollMotion(),
           children: [
             SlidableAction(
-              backgroundColor: Color(0xffDC143C),
+              backgroundColor: const Color(0xffDC143C),
               foregroundColor: Colors.white,
               icon: Icons.delete,
               label: 'Deletar',
