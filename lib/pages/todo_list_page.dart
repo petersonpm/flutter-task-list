@@ -15,7 +15,7 @@ class _TodoListPageState extends State<TodoListPage> {
 
   List<Todo> todos = [];
   Todo? deletedTodo;
-  int?  deletedTodoPos;
+  int? deletedTodoPos;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class _TodoListPageState extends State<TodoListPage> {
                     ),
                     SizedBox(width: 8),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: showDeleteTodosConfirmationDialog,
                       style: ElevatedButton.styleFrom(
                           primary: const Color(0xffDC143C),
                           padding: const EdgeInsets.all(16)),
@@ -109,7 +109,10 @@ class _TodoListPageState extends State<TodoListPage> {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Tarefa ${todo.title} foi Removida com sucesso!', style: TextStyle(fontSize: 12),),
+        content: Text(
+          'Tarefa ${todo.title} foi Removida com sucesso!',
+          style: TextStyle(fontSize: 12),
+        ),
         backgroundColor: Color(0xffDC143C),
         action: SnackBarAction(
           label: 'Desfazer',
@@ -124,5 +127,37 @@ class _TodoListPageState extends State<TodoListPage> {
         duration: const Duration(seconds: 5),
       ),
     );
+  }
+
+  void showDeleteTodosConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Limpar tudo?'),
+        content: Text('Você tem certeza que deseja apagar todas as tarefas?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: TextButton.styleFrom(primary: Colors.black),
+            child: Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              deleteAllTodos();
+            },
+            style: TextButton.styleFrom(primary: Color(0xffDC143C)),
+            child: Text('Limpar Tudo!'),
+          ),
+        ],
+      ),
+    );
+  }
+  void deleteAllTodos(){
+    setState(() {
+      todos.clear();
+    });
   }
 }
